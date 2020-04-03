@@ -11,12 +11,14 @@ import threading
 env = ConfigParser()
 env.read('env.ini')
 telegram_bot_token = env['inspector']['telegram_bot_token']
+system_url = env['inspector']['sys_url']
+telegram_group_id = env['inspector']['telegram_group_id']
 
 
 listen_status = True;
 
 
-updater = Updater(token=telegram_bot_token)  # 呼叫 bot 用
+updater = Updater(token=telegram_bot_token)
 
 
 # 確認使用者是否為指定的 telegram 管理員
@@ -59,11 +61,11 @@ def start_work(bot, update):
 		update.message.reply_text('Permission denied!')
 		return
 	
-	global listen_status
+	global listen_status, listen_system
 	listen_status = True
+	listen_system = threading.Thread(target = listen, args=(bot,))
 	if not listen_system.is_alive():
-		listen_system.start()  # 開新執行緒
-		# 確認執行緒是不是真的開啟了
+		listen_system.start()
 		if listen_system.is_alive():
 			update.message.reply_text('OK, I go to work now QQ.')
 		else:
@@ -85,33 +87,36 @@ def unlisten(bot, update):
 	if not listen_system.is_alive():
 		update.message.reply_text('Oh no, something went wrong.')
 	else:
-		listen_system.join()  # 關閉執行緒
+		listen_system.join()
 		print("thread killed")
-		listen_system = threading.Thread(target = listen)  # 重新設定執行緒
+		listen_system = threading.Thread(target = listen)
 		if not listen_system.is_alive():
 			update.message.reply_text('OK, now I get off work. YA~!')
 		else:
 			update.message.reply_text('Oh no, something went wrong.')
 
 
-def listen():
+def listen(bot):
 	print('thread')
 	while True:
 		if listen_status:
-			# TODO: 監視系統有沒有呼吸
-			pass
+			r = requests.get(system_url)
+			if r.status_code != 200:
+				bot.sendMessage(telegram_group_id, 'OMG! ' + str(r.status_code))
+				return
 		else:
 			return
 
+		time.sleep(180)
 
-updater.dispatcher.add_handler(CommandHandler('info', show_user_info))  # 顯示使用者資訊
+
+updater.dispatcher.add_handler(CommandHandler('info', show_user_info))
 updater.dispatcher.add_handler(CommandHandler('status', bot_status))
 updater.dispatcher.add_handler(CommandHandler('work', start_work))
 updater.dispatcher.add_handler(CommandHandler('rest', unlisten))
 
 
-listen_system = threading.Thread(target = listen)  # 採用多執行緒來監聽
-
+listen_system = threading.Thread(target = listen)
 
 updater.start_polling()
 updater.idle()

@@ -63,8 +63,8 @@ def start_work(bot, update):
 	
 	global listen_status, listen_system
 	listen_status = True
-	listen_system = threading.Thread(target = listen, args=(bot,))
 	if not listen_system.is_alive():
+		listen_system = threading.Thread(target = listen, args=(bot,))
 		listen_system.start()
 		if listen_system.is_alive():
 			update.message.reply_text('OK, I go to work now QQ.')

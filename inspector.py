@@ -98,16 +98,14 @@ def unlisten(bot, update):
 
 def listen(bot):
 	print('thread')
-	while True:
-		if listen_status:
-			r = requests.get(system_url)
-			if r.status_code != 200:
-				bot.sendMessage(telegram_group_id, 'OMG! ' + str(r.status_code))
-				return
-		else:
+	while listen_status:
+		r = requests.get(system_url)
+		print(time.strftime("%Y/%m/%d %H:%M:%S"))
+		if r.status_code != 200:
+			bot.sendMessage(telegram_group_id, 'OMG! ' + str(r.status_code))
 			return
-
 		time.sleep(180)
+	return
 
 
 updater.dispatcher.add_handler(CommandHandler('info', show_user_info))

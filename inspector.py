@@ -99,12 +99,18 @@ def unlisten(bot, update):
 def listen(bot):
 	print('thread')
 	while listen_status:
-		r = requests.get(system_url)
-		print(time.strftime("%Y/%m/%d %H:%M:%S"))
-		if r.status_code != 200:
-			bot.sendMessage(telegram_group_id, 'OMG! ' + str(r.status_code))
-			return
-		time.sleep(180)
+		try:
+			print(time.strftime("%Y/%m/%d %H:%M:%S"))
+			r = requests.get(system_url)
+		except:
+			print("=== Connect failed! ===")
+			bot.sendMessage(telegram_group_id, 'OMG! 網路好像壞掉惹一段時間')
+			raise
+		else:
+			if r.status_code != 200:
+				bot.sendMessage(telegram_group_id, 'OMG! ' + str(r.status_code))
+				return
+			time.sleep(180)
 	return
 
 

@@ -30,15 +30,12 @@ def is_telegram_admin(telegram_user_id):
 
 def show_user_info(bot, update):
 	user_info = ''
-	user_info = user_info + '發送人 first name：{}\n'.format(update.message.from_user.first_name)
-	user_info = user_info + '發送人 last name：{}\n'.format(update.message.from_user.last_name)
 	user_info = user_info + '發送人 full name：{}\n'.format(update.message.from_user.full_name)
 	user_info = user_info + '發送人 username：{}\n'.format(update.message.from_user.username)
 	user_info = user_info + '發送人 id：{}\n'.format(update.message.from_user.id)
 	user_info = user_info + 'message_id：{}\n'.format(update.message.message_id)
 	user_info = user_info + '所在的聊天室 id：{}\n'.format(update.message.chat.id)
 	user_info = user_info + '所在的聊天室 type：{}\n'.format(update.message.chat.type)
-	user_info = user_info + '訊息內容：{}\n'.format(update.message.text)
 	
 	update.message.reply_text(user_info)
 

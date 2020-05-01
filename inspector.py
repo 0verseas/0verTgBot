@@ -11,7 +11,7 @@ import threading
 env = ConfigParser()
 env.read('env.ini')
 telegram_bot_token = env['inspector']['telegram_bot_token']
-system_url = env['inspector']['sys_url']
+system_urls = env['inspector']['sys_urls']
 telegram_group_id = env['inspector']['telegram_group_id']
 
 
@@ -95,19 +95,26 @@ def unlisten(bot, update):
 
 def listen(bot):
 	print('thread')
+	sys_url_list = [url for url in system_urls.split('、')]
+	listen_interval = 5 if 300 / len(sys_url_list) < 5 else (300 / len(sys_url_list))
 	while listen_status:
-		try:
-			print(time.strftime("%Y/%m/%d %H:%M:%S"))
-			r = requests.get(system_url)
-		except:
-			print("=== Connect failed! ===")
-			bot.sendMessage(telegram_group_id, 'OMG! 網路好像壞掉惹一段時間')
-			raise
-		else:
-			if r.status_code != 200:
-				bot.sendMessage(telegram_group_id, 'OMG! ' + str(r.status_code))
-				return
-			time.sleep(180)
+		for url in sys_url_list:
+			if not listen_status:
+				break
+
+			try:
+				print(time.strftime("%Y/%m/%d %H:%M:%S"), url)
+				r = requests.get(url)
+			except:
+				print("=== Connect failed! ===")
+				bot.sendMessage(telegram_group_id, 'OMG! 網路好像壞掉惹一段時間')
+				raise
+			else:
+				if r.status_code != 200:
+					print("↑ return", r.status_code)
+					bot.sendMessage(telegram_group_id, 'OMG! ' + url + ' return ' +str(r.status_code))
+					return
+				time.sleep(listen_interval)
 	return
 
 

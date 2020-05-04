@@ -43,7 +43,10 @@ def show_user_info(bot, update):
 def bot_status(bot, update):
 	now_status = ''
 	if listen_system.is_alive():
-		now_status = now_status + '監視系統中\n'
+		sys_url_list = [url for url in system_urls.split('、')]
+		now_status = now_status + '監視系統中（間隔：{} 秒）\n'.format(5 if 300 / len(sys_url_list) < 5 else (300 / len(sys_url_list)))
+		for url in sys_url_list:
+			now_status = now_status + url + '\n'
 	else:
 		now_status = now_status + '放系統自己吃草\n'
 

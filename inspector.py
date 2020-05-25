@@ -107,7 +107,11 @@ def listen(bot):
 
 			try:
 				print(time.strftime("%Y/%m/%d %H:%M:%S"), url)
-				r = requests.get(url)
+				r = requests.get(url, timeout=10)
+			except requests.exceptions.Timeout:
+				print("=== Timeout! ===")
+				bot.sendMessage(telegram_group_id, 'OMG! 連線逾時啦')
+				raise
 			except:
 				print("=== Connect failed! ===")
 				bot.sendMessage(telegram_group_id, 'OMG! 網路好像壞掉惹一段時間')

@@ -44,7 +44,7 @@ def bot_status(bot, update):
 	now_status = ''
 	if listen_system.is_alive():
 		sys_url_list = [url for url in system_urls.split('、')]
-		now_status = now_status + '監視系統中（間隔：{} 秒）\n'.format(5 if 300 / len(sys_url_list) < 5 else (300 / len(sys_url_list)))
+		now_status = now_status + '監視系統中（request 間隔 1 分鐘）\n'
 		for url in sys_url_list:
 			now_status = now_status + url + '\n'
 	else:
@@ -99,7 +99,7 @@ def unlisten(bot, update):
 def listen(bot):
 	print('thread')
 	sys_url_list = [url for url in system_urls.split('、')]
-	listen_interval = 5 if 300 / len(sys_url_list) < 5 else (300 / len(sys_url_list))
+	listen_interval = 60  # 每個 request 間隔秒數
 	while listen_status:
 		for url in sys_url_list:
 			if not listen_status:

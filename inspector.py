@@ -44,7 +44,7 @@ def bot_status(bot, update):
 	now_status = ''
 	if listen_system.is_alive():
 		sys_url_list = [url for url in system_urls.split('、')]
-		now_status = now_status + '監視系統中（request 間隔 1 分鐘）\n'
+		now_status = now_status + '監視系統中（週期 {} 分鐘）\n'.format(len(sys_url_list))
 		for url in sys_url_list:
 			now_status = now_status + url + '\n'
 	else:

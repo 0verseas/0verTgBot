@@ -110,7 +110,7 @@ def listen(bot):
 				r = requests.head(url, timeout=10)
 			except requests.exceptions.Timeout:
 				print("=== Timeout! ===")
-				bot.sendMessage(telegram_group_id, 'OMG! 連線逾時啦')
+				bot.sendMessage(telegram_group_id, 'OMG! ' + url + '連線逾時啦')
 				raise
 			except:
 				print("=== Connect failed! ===")

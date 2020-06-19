@@ -15,5 +15,4 @@ For ubuntu user:
 2. `sudo apt install python3-pip`
 4. `pipenv install`
 5. `cp env.ini.example env.ini` and set config for your environment.
-6. `pipenv shell`
-7. `pythen3 <bot>.py` to start
+6. `pipenv run python3 <bot>.py` to start.

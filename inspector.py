@@ -110,8 +110,15 @@ def listen(bot):
 				r = requests.head(url, timeout=10)
 			except requests.exceptions.Timeout:
 				print("=== Timeout! ===")
-				bot.sendMessage(telegram_group_id, 'OMG! ' + url + ' 連線逾時啦')
-				raise
+				# 再給 Ta 一次機會
+				try:
+					rr = requests.head(url, timeout=15)  # re-request
+				except requests.exceptions.Timeout:
+					bot.sendMessage(telegram_group_id, 'OMG! ' + url + ' 連線逾時啦')
+					raise
+				else:
+					print("回神了")
+					time.sleep(listen_interval/2)
 			except:
 				print("=== Connect failed! ===")
 				bot.sendMessage(telegram_group_id, 'OMG! 網路好像壞掉惹一段時間')

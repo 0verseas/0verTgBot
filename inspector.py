@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 
 
-from telegram.ext import Updater, CommandHandler
 from configparser import ConfigParser
-import requests
 import time
 import threading
+
+from telegram.ext import Updater, CommandHandler
+import requests
 
 
 env = ConfigParser()
@@ -15,7 +16,7 @@ system_urls = env['inspector']['sys_urls']
 telegram_group_id = env['inspector']['telegram_group_id']
 
 
-listen_status = True;
+listen_status = True
 
 
 updater = Updater(token=telegram_bot_token)
